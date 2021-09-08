@@ -1,0 +1,68 @@
+openapi: 3.0.1
+info:
+  title: catalog service REST API
+  license:
+    name: Omnirio
+    url: https://omnirio.com/
+  version: '1.0'
+servers:
+  - url: http://localhost:8080/catalog-service/api
+    description: catalog-service dev server
+tags:
+  - name: Attributes
+    description: attributes management
+paths:
+  /v1/attribute:
+    post:
+      tags:
+        - Attributes
+      summary: performs save operation
+      description: To save the Category/Product attributes.
+      operationId: addAttributes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttributeDto'
+        required: true
+      responses:
+        '200':
+          description: successful save operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntityDto'
+        '500':
+          description: failed to save the Attribute details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntityDto'
+components:
+  schemas:
+    AttributeDto:
+      type: object
+      properties:
+        attributeId:
+          type: integer
+          format: int64
+        categoryId:
+          type: integer
+          format: int64
+        productId:
+          type: integer
+          format: int64
+        attributeName:
+          type: string
+        attributeValue:
+          type: string
+    ResponseEntityDto:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: object
+        totalRecords:
+          type: integer
+          format: int32

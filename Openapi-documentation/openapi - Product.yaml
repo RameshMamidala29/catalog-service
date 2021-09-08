@@ -1,0 +1,123 @@
+openapi: 3.0.1
+info:
+  title: catalog service REST API
+  license:
+    name: Omnirio
+    url: https://omnirio.com/
+  version: '1.0'
+servers:
+  - url: http://localhost:8080/catalog-service/api
+    description: catalog service dev server
+tags:
+  - name: Product
+    description: product management
+paths:
+  /v1/product:
+    post:
+      tags:
+        - Product
+      summary: To perform product save operation
+      description: To save the product.
+      operationId: addProduct
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductDto'
+        required: true
+      responses:
+        '200':
+          description: successful save operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntityDto'
+        '500':
+          description: failed to save the product details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntityDto'
+  /v1/product/{id}:
+    get:
+      tags:
+        - Product
+      summary: To perform product fetch operation
+      description: To get the product.
+      operationId: viewProduct
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successfully got the product
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntityDto'
+        '500':
+          description: failed to get the product details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntityDto'
+components:
+  schemas:
+    AttributeDto:
+      type: object
+      properties:
+        attributeId:
+          type: integer
+          format: int64
+        categoryId:
+          type: integer
+          format: int64
+        productId:
+          type: integer
+          format: int64
+        attributeName:
+          type: string
+        attributeValue:
+          type: string
+    CategoryDto:
+      type: object
+      properties:
+        categoryId:
+          type: integer
+          format: int64
+        categoryName:
+          type: string
+        attributes:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeDto'
+    ProductDto:
+      type: object
+      properties:
+        productId:
+          type: integer
+          format: int64
+        productName:
+          type: string
+        category:
+          $ref: '#/components/schemas/CategoryDto'
+        attributes:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeDto'
+    ResponseEntityDto:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: object
+        totalRecords:
+          type: integer
+          format: int32

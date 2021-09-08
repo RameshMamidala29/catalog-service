@@ -1,0 +1,108 @@
+openapi: 3.0.1
+info:
+  title: catalog service REST API
+  license:
+    name: Omnirio
+    url: https://omnirio.com/
+  version: '1.0'
+servers:
+  - url: http://localhost:8080/catalog-service/api
+    description: catalog service dev server
+tags:
+  - name: Category
+    description: Category management
+paths:
+  /v1/category:
+    post:
+      tags:
+        - Category
+      summary: To perform category save operation
+      description: To save the Category.
+      operationId: addCategory
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryDto'
+        required: true
+      responses:
+        '200':
+          description: successful save operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntityDto'
+        '500':
+          description: failed to save the category
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntityDto'
+  /v1/category/{id}:
+    get:
+      tags:
+        - Category
+      summary: To perform category fetch operation by id
+      description: To fetch the category by id.
+      operationId: viewCategory
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successfully got the category details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntityDto'
+        '500':
+          description: failed to get the category details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntityDto'
+components:
+  schemas:
+    AttributeDto:
+      type: object
+      properties:
+        attributeId:
+          type: integer
+          format: int64
+        categoryId:
+          type: integer
+          format: int64
+        productId:
+          type: integer
+          format: int64
+        attributeName:
+          type: string
+        attributeValue:
+          type: string
+    CategoryDto:
+      type: object
+      properties:
+        categoryId:
+          type: integer
+          format: int64
+        categoryName:
+          type: string
+        attributes:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeDto'
+    ResponseEntityDto:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: object
+        totalRecords:
+          type: integer
+          format: int32
